@@ -1,7 +1,7 @@
 express = require 'express'
-parser = require './parser'
-client = require './client'
-presenter = require './presenter'
+parser = require './lib/parser'
+client = require './lib/client'
+presenter = require './lib/presenter'
 
 app = express()
 app.use express.bodyParser()
