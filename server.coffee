@@ -17,7 +17,7 @@ app.post "/sms/", (req, res) ->
   if busNumber
     client.fetchPredictions busNumber, app.get('apiKey'), (results) ->
         predictions = parser.fromServer(results)
-        [success, message] = presenter.format(predictions)
+        [success, message] = presenter.formatAsSMS(predictions)
         if success then status = 200 else status = 404
         respondWithSMS res, status, message
   else
