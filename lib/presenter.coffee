@@ -1,3 +1,5 @@
+helpers = require "./helpers"
+
 module.exports =
   formatAsHTML: (predictions) ->
     return [false, "Error: No predictions available"] unless predictions.length > 0
@@ -18,7 +20,7 @@ SMSformatHeader = (prediction, response) ->
   response.push "Rt #{prediction.route.number}:"
 
 SMSformatPrediction = (prediction, response) ->
-  response.push "In #{prediction.prediction.minutes}m: #{trimStopName prediction.stop.stopName}"
+  response.push "In #{prediction.prediction.minutes}m: #{helpers.trimStopName prediction.stop.stopName}"
 
 HTMLformatHeader = (prediction, response) ->
   response.routeNumber = prediction.route.number
@@ -26,7 +28,7 @@ HTMLformatHeader = (prediction, response) ->
 
 HTMLformatPrediction = (prediction, response) ->
   returnValue =
-    stopName: prediction.stop.stopName
+    stopName: helpers.trimStopName prediction.stop.stopName
     estimate: prediction.prediction.minutes
     percentComplete: calculatePercentComplete(prediction.prediction.minutes)
   console.log "prediction: ", returnValue
@@ -35,6 +37,3 @@ HTMLformatPrediction = (prediction, response) ->
 calculatePercentComplete = (minutes) ->
   return 0 if minutes > 10
   100 - (minutes/10) * 100
-
-trimStopName = (stopName) ->
-  stopName.replace(/(?:^.*&\s)(\w*)/gim, "$1")

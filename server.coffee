@@ -8,6 +8,18 @@ app.use express.bodyParser()
 throw "API Key not configured! ($BUSTRACKER_API_KEY)" unless process.env.BUSTRACKER_API_KEY
 app.set 'apiKey', process.env.BUSTRACKER_API_KEY
 
+app.get "/route/:routeId", (req, res) ->
+  console.log "Incoming Web: ", req.params
+  res.set "Content-Type", "text/html"
+
+  busNumber = req.params["routeId"]
+
+  client.fetchPredictions busNumber, app.get('apiKey'), (results) ->
+    predictions = parser.fromServer(results)
+    [success, message] = presenter.formatAsHTML(predictions)
+    if success then status = 200 else status = 404
+    respondWithHTML res, status, message
+
 app.post "/sms/", (req, res) ->
   console.log "Incoming SMS: ", req.body
   res.set "Content-Type", "text/plain"
