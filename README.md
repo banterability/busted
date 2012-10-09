@@ -1,6 +1,6 @@
 # Busted
 
-Next stop information for Chicago busses via SMS
+Next stop information for Chicago busses via SMS & Web
 
 ## Configuration
 
