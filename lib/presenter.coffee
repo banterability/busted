@@ -25,6 +25,7 @@ SMSformatPrediction = (prediction, response) ->
 HTMLformatHeader = (prediction, response) ->
   response.routeNumber = prediction.route.number
   response.routeDirection = prediction.route.direction
+  response.busNumber = prediction.busNumber
 
 HTMLformatPrediction = (prediction, response) ->
   response.predictions.push

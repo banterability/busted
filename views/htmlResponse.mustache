@@ -17,7 +17,7 @@
       padding-bottom: 30px;
       color: #dcdcdc;
     }
-    header{
+    footer h1{
       font-size: 1.8em;
       text-align: center;
       line-height: 2.2em;
@@ -68,16 +68,14 @@
   </style>
 </head>
 <body>
-<header>
-  Route {{routeNumber}}: {{routeDirection}}
-</header>
 <ul id="results">
   {{#predictions}}
     {{> prediction }}
   {{/predictions}}
 </ul>
 <footer>
-  <p>SMS: Text "{{routeNumber}}" to <a href="sms:1-754-227-2287">(754) 227-2287</a></p>
+  <h1>Route {{routeNumber}}: {{routeDirection}}</h1>
+  <p>SMS: Text "{{busNumber}}" to <a href="sms:1-754-227-2287">(754) 227-2287</a></p>
   <!-- <p>Updated: 8 seconds ago</p> -->
 </footer>
 </body>
