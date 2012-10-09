@@ -27,12 +27,10 @@ HTMLformatHeader = (prediction, response) ->
   response.routeDirection = prediction.route.direction
 
 HTMLformatPrediction = (prediction, response) ->
-  returnValue =
+  response.predictions.push
     stopName: helpers.trimStopName prediction.stop.stopName
     estimate: prediction.prediction.minutes
     percentComplete: calculatePercentComplete(prediction.prediction.minutes)
-  console.log "prediction: ", returnValue
-  response.predictions.push returnValue
 
 calculatePercentComplete = (minutes) ->
   return 0 if minutes > 10

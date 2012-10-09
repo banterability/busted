@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name = "viewport" content = "width = device-width">
+  <!--
+  <link rel="apple-touch-icon" href="touch-icon-iphone.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="touch-icon-ipad.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="touch-icon-iphone4.png" />
+  -->
+  <title>Busted</title>
+
+  <style type="text/css">
+    body{
+      font-family: "Helvetica Neue";
+      background-color: #232323;
+      margin: 0;
+      padding-bottom: 30px;
+      color: #dcdcdc;
+    }
+    header{
+      font-size: 1.8em;
+      text-align: center;
+      line-height: 2.2em;
+      color: #a9a9a9;
+      padding-bottom: 10px;
+    }
+    footer{
+      font-size: 0.9em;
+      line-height: 1.2em;
+      text-align: right;
+      color: #a9a9a9;
+      padding-top: 10px;
+      padding-right:5px;
+    }
+    #results{
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      background-color: rgba(0,0,255,0.4);
+    }
+    #results li{
+      position: relative;
+      list-style: none;
+      font-size: 2em;
+      height: 1.75em;
+    }
+    #results .destination, #results .estimate{
+      position: absolute;
+      font-weight: bold;
+      overflow: hidden;
+      top: 8px;
+    }
+    #results .destination{
+      left: 5px;
+    }
+    #results .estimate{
+      right: 5px;
+    }
+    .meter{
+      background-color: #232323;
+      height: 100%;
+      width: 50%;
+      display: block;
+    }
+    a{
+      color: #ddd;
+    }
+  </style>
+</head>
+<body>
+<header>
+  Route {{routeNumber}}: {{routeDirection}}
+</header>
+<ul id="results">
+  {{#predictions}}
+    {{> prediction }}
+  {{/predictions}}
+</ul>
+<footer>
+  <p>SMS: Text "{{routeNumber}}" to <a href="sms:1-754-227-2287">(754) 227-2287</a></p>
+  <!-- <p>Updated: 8 seconds ago</p> -->
+</footer>
+</body>
+</html>
