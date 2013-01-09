@@ -3,6 +3,13 @@ parser = require './lib/parser'
 client = require './lib/client'
 presenter = require './lib/presenter'
 
+throw "Nodefly API Key not configured! ($NODEFLY_API_KEY)" unless process.env.NODEFLY_API_KEY
+require('nodefly').profile(
+  process.env.NODEFLY_API_KEY,
+  'Busted',
+  {}
+)
+
 app = express()
 
 app.set 'view engine', 'mustache'
@@ -13,8 +20,8 @@ app.engine 'mustache', require 'hogan-express'
 
 app.use express.bodyParser()
 
-throw "API Key not configured! ($BUSTRACKER_API_KEY)" unless process.env.BUSTRACKER_API_KEY
-app.set 'apiKey', process.env.BUSTRACKER_API_KEY
+throw "CTA API Key not configured! ($CTA_API_KEY)" unless process.env.CTA_API_KEY
+app.set 'apiKey', process.env.CTA_API_KEY
 
 app.get "/route/:routeId", (req, res) ->
   console.log "Incoming Web: ", req.params

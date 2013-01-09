@@ -4,7 +4,10 @@ Next stop information for Chicago busses via SMS & Web
 
 ## Configuration
 
-Expects an [API key for CTA Bus Tracker](http://www.transitchicago.com/developers/bustracker.aspx) at $BUSTRACKER_API_KEY.
+Expects the following environment variables:
+
+- `CTA_API_KEY`: To retrieve prediction data. Key available from [CTA Bus Tracker](http://www.transitchicago.com/developers/bustracker.aspx)
+- `NODEFLY_API_KEY`: Monitoring & performance analysis. Key available from [Nodefly](http://apm.nodefly.com/)
 
 ## Usage
 
