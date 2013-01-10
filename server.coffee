@@ -5,25 +5,29 @@ client = require './lib/client'
 presenter = require './lib/presenter'
 helpers = require "./lib/helpers"
 
-throw "Nodefly API Key not configured! ($NODEFLY_API_KEY)" unless process.env.NODEFLY_API_KEY
-require('nodefly').profile(
-  process.env.NODEFLY_API_KEY,
-  'Busted',
-  {}
-)
+# Configuration
 
 app = express()
-
 app.set 'view engine', 'mustache'
 app.set 'layout', 'layout'
 # app.set 'partials', head: 'head'
-app.enable 'view cache' if app.settings.env is "production"
 app.engine 'mustache', require 'hogan-express'
-
 app.use express.bodyParser()
 
 throw "CTA API Key not configured! ($CTA_API_KEY)" unless process.env.CTA_API_KEY
 app.set 'apiKey', process.env.CTA_API_KEY
+
+if app.settings.env is "production"
+  app.enable 'view cache'
+
+  throw "Nodefly API Key not configured! ($NODEFLY_API_KEY)" unless process.env.NODEFLY_API_KEY
+  require('nodefly').profile(
+    process.env.NODEFLY_API_KEY,
+    'Busted',
+    {}
+  )
+
+# Routes
 
 app.get "/", (req, res) ->
   renderHTML
@@ -63,6 +67,8 @@ app.post "/sms/", (req, res) ->
   else
     renderSMS res, 400, "Error: Your message must include a bus number"
 
+# Helpers
+
 renderSMS = (res, status, message) ->
   console.log "[Resposne (SMS)]: ", {status, message}
   truncatedMessage = message.substring 0, 160
@@ -74,6 +80,8 @@ renderHTML = ({res, template, partials, status, context}) ->
   console.log "[Resposne (Web)]: ", {template, status, context, partials}
   res.locals = context
   res.render template, partials: partials
+
+# Start server
 
 port = process.env.PORT || 5000
 app.listen port, ->
