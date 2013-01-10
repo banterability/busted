@@ -1,7 +1,9 @@
 express = require 'express'
+
 parser = require './lib/parser'
 client = require './lib/client'
 presenter = require './lib/presenter'
+helpers = require "./lib/helpers"
 
 throw "Nodefly API Key not configured! ($NODEFLY_API_KEY)" unless process.env.NODEFLY_API_KEY
 require('nodefly').profile(
@@ -39,7 +41,7 @@ app.post "/sms/", (req, res) ->
   console.log "Incoming SMS: ", req.body
   res.set "Content-Type", "text/plain"
 
-  busNumber = extractBusNumber(req.body.Body || "")
+  busNumber = helpers.extractBusNumber(req.body.Body || "")
 
   if busNumber
     client.fetchPredictions busNumber, app.get('apiKey'), (results) ->
