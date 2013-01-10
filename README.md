@@ -1,4 +1,4 @@
-# Busted
+# Busted [![Build Status](https://travis-ci.org/banterability/busted.png?branch=master)](https://travis-ci.org/banterability/busted)
 
 Next stop information for Chicago busses via SMS & Web
 
