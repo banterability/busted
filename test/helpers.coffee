@@ -19,3 +19,12 @@ describe "Helpers", ->
     it "should handle stop names with non-letter characters", ->
       helpers.trimStopName("Halsted & Milwaukee/Grand").should.equal "Milwaukee/Grand"
       helpers.trimStopName("Halsted & 63rd Street (Green Line)").should.equal "63rd Street (Green Line)"
+
+  describe "#calculatePercentComplete", ->
+    it "should return 0 if bus is more than 10 minutes away", ->
+      helpers.calculatePercentComplete(50).should.equal 0
+
+    it "should return percentage complete of 10 minute wait time", ->
+      helpers.calculatePercentComplete(10).should.equal 0
+      helpers.calculatePercentComplete(5).should.equal 50
+      helpers.calculatePercentComplete(0).should.equal 100
