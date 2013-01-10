@@ -15,9 +15,9 @@ require('nodefly').profile(
 app = express()
 
 app.set 'view engine', 'mustache'
-# app.set 'layout', 'layout'
+app.set 'layout', 'layout'
 # app.set 'partials', head: 'head'
-# app.enable 'view cache'
+app.enable 'view cache' if app.settings.env is "production"
 app.engine 'mustache', require 'hogan-express'
 
 app.use express.bodyParser()
@@ -35,7 +35,12 @@ app.get "/route/:routeId", (req, res) ->
     predictions = parser.fromServer(results)
     [success, context] = presenter.formatAsHTML(predictions)
     if success then status = 200 else status = 404
-    respondWithHTML res, status, context
+    context.title = "Route #{busNumber}"
+
+    options = {res, status, context}
+    options.template = 'htmlResponse'
+    options.partials = {prediction: '_prediction'}
+    renderHTML(options)
 
 app.post "/sms/", (req, res) ->
   console.log "Incoming SMS: ", req.body
@@ -48,24 +53,21 @@ app.post "/sms/", (req, res) ->
         predictions = parser.fromServer(results)
         [success, message] = presenter.formatAsSMS(predictions)
         if success then status = 200 else status = 404
-        respondWithSMS res, status, message
+        renderSMS res, status, message
   else
-    respondWithSMS res, 400, "Error: Your message must include a bus number"
+    renderSMS res, 400, "Error: Your message must include a bus number"
 
-respondWithSMS = (res, status, message) ->
-  console.log "Outgoing SMS: ", {status, message}
+renderSMS = (res, status, message) ->
+  console.log "[Resposne (SMS)]: ", {status, message}
   truncatedMessage = message.substring 0, 160
   if truncatedMessage isnt message
     console.error "Outgoing message exceeds 160 characters (#{message.length}); truncating..."
-  res.send(200, truncatedMessage) # Always send 200, or Twilio won't send an SMS
+  res.send 200, truncatedMessage # Always send 200, or Twilio won't send an SMS
 
-respondWithHTML = (res, status, context) ->
-  console.log "Outgoing Web: ", {status, context}
+renderHTML = ({res, template, partials, status, context}) ->
+  console.log "[Resposne (Web)]: ", {template, status, context, partials}
   res.locals = context
-  res.render 'htmlResponse', partials: {prediction: 'prediction'}
-
-extractBusNumber = (string) ->
-  string.match(/(\d+)/)?[1]
+  res.render template, partials: partials
 
 port = process.env.PORT || 5000
 app.listen port, ->
