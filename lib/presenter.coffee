@@ -31,8 +31,4 @@ HTMLformatPrediction = (prediction, response) ->
   response.predictions.push
     stopName: helpers.trimStopName prediction.stop.stopName
     estimate: prediction.prediction.minutes
-    percentComplete: calculatePercentComplete(prediction.prediction.minutes)
-
-calculatePercentComplete = (minutes) ->
-  return 0 if minutes > 10
-  100 - (minutes/10) * 100
+    percentComplete: helpers.calculatePercentComplete(prediction.prediction.minutes)
