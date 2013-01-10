@@ -25,6 +25,12 @@ app.use express.bodyParser()
 throw "CTA API Key not configured! ($CTA_API_KEY)" unless process.env.CTA_API_KEY
 app.set 'apiKey', process.env.CTA_API_KEY
 
+app.get "/", (req, res) ->
+  renderHTML
+    res: res
+    template: 'index'
+    status: 200
+
 app.get "/route/:routeId", (req, res) ->
   console.log "Incoming Web: ", req.params
   res.set "Content-Type", "text/html"
