@@ -1,0 +1,55 @@
+body{
+  font-family: "Helvetica Neue";
+  background-color: #232323;
+  margin: 0;
+  padding-bottom: 30px;
+  color: #dcdcdc;
+}
+footer h1{
+  font-size: 1.8em;
+  text-align: center;
+  line-height: 2.2em;
+  color: #a9a9a9;
+  padding-bottom: 10px;
+}
+footer{
+  font-size: 0.9em;
+  line-height: 1.2em;
+  text-align: right;
+  color: #a9a9a9;
+  padding-top: 10px;
+  padding-right:5px;
+}
+#results{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: rgba(0,0,255,0.4);
+}
+#results li{
+  position: relative;
+  list-style: none;
+  font-size: 2em;
+  height: 1.75em;
+}
+#results .destination, #results .estimate{
+  position: absolute;
+  font-weight: bold;
+  overflow: hidden;
+  top: 8px;
+}
+#results .destination{
+  left: 5px;
+}
+#results .estimate{
+  right: 5px;
+}
+.meter{
+  background-color: #232323;
+  height: 100%;
+  width: 50%;
+  display: block;
+}
+a{
+  color: #ddd;
+}
