@@ -13,6 +13,7 @@ app.set 'layout', 'layout'
 # app.set 'partials', head: 'head'
 app.engine 'mustache', require 'hogan-express'
 app.use express.bodyParser()
+app.use "/assets", express.static "#{__dirname}/public"
 
 throw "CTA API Key not configured! ($CTA_API_KEY)" unless process.env.CTA_API_KEY
 app.set 'apiKey', process.env.CTA_API_KEY
