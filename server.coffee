@@ -1,7 +1,7 @@
 express = require 'express'
 
 parser = require './lib/parser'
-client = require './lib/client'
+Client = require './lib/client'
 presenter = require './lib/presenter'
 helpers = require "./lib/helpers"
 
@@ -42,7 +42,8 @@ app.get "/route/:routeId", (req, res) ->
 
   busNumber = req.params["routeId"]
 
-  client.fetchPredictions busNumber, app.get('apiKey'), (results) ->
+  client = new Client {apiKey: app.get('apiKey')}
+  client.getPredictions busNumber, (results) ->
     predictions = parser.fromServer(results)
     [success, context] = presenter.formatAsHTML(predictions)
     if success then status = 200 else status = 404
@@ -60,7 +61,8 @@ app.post "/sms/", (req, res) ->
   busNumber = helpers.extractBusNumber(req.body.Body || "")
 
   if busNumber
-    client.fetchPredictions busNumber, app.get('apiKey'), (results) ->
+    client = new Client {apiKey: app.get('apiKey')}
+    client.getPredictions busNumber, (results) ->
         predictions = parser.fromServer(results)
         [success, message] = presenter.formatAsSMS(predictions)
         if success then status = 200 else status = 404
