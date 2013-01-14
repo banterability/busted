@@ -1,20 +1,26 @@
 fetch = require 'fetch'
 
-BASE_URL = "http://www.ctabustracker.com/bustime/api/v1/getpredictions"
+class Client
+  BASE_URL = "http://www.ctabustracker.com/bustime/api/v1/getpredictions"
 
-module.exports.fetchPredictions = (busNumber, apiKey, callback) ->
-  url = buildUrl(busNumber, apiKey)
-  console.log "API Fetch: ", url
-  fetch.fetchUrl url, (err, meta, body) ->
-    callback body.toString()
+  constructor: (options={}) ->
+    @apiKey = options.apiKey
 
-buildQueryString = (busNumber, apiKey) ->
-  params =
-    key: apiKey
-    top: 5
-    vid: busNumber
+  buildQueryString: (busNumber) ->
+    params =
+      key: @apiKey
+      top: 5
+      vid: busNumber
 
-  ("#{key}=#{value}" for key, value of params).join("&")
+    ("#{key}=#{value}" for key, value of params).join("&")
 
-buildUrl = (busNumber, apiKey) ->
-  "#{BASE_URL}?#{buildQueryString busNumber, apiKey}"
+  buildUrl: (busNumber) ->
+    "#{BASE_URL}?#{@buildQueryString busNumber}"
+
+  getPredictions: (busNumber, callback) ->
+    url = @buildUrl busNumber
+    console.log "API Fetch: ", url
+    fetch.fetchUrl url, (err, meta, body) ->
+      callback body.toString()
+
+module.exports = Client
