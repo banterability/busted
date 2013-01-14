@@ -1,55 +1,50 @@
 body{
+  background-color: #130f30;
+  color: #ddd;
   font-family: "Helvetica Neue";
-  background-color: #232323;
   margin: 0;
   padding-bottom: 30px;
-  color: #dcdcdc;
 }
 footer h1{
-  font-size: 1.8em;
-  text-align: center;
-  line-height: 2.2em;
-  color: #a9a9a9;
-  padding-bottom: 10px;
+  color: #aaa;
+  font-size: 1.6em;
 }
 footer{
-  font-size: 0.9em;
-  line-height: 1.2em;
-  text-align: right;
   color: #a9a9a9;
-  padding-top: 10px;
-  padding-right:5px;
+  font-size: 0.8em;
+  text-align: center;
 }
 #results{
+  background-color: rgba(247, 83, 23, 0.8);
   margin: 0;
   padding: 0;
   width: 100%;
-  background-color: rgba(0,0,255,0.4);
 }
 #results li{
-  position: relative;
-  list-style: none;
   font-size: 2em;
   height: 1.75em;
+  list-style: none;
+  position: relative;
 }
 #results .destination, #results .estimate{
-  position: absolute;
   font-weight: bold;
   overflow: hidden;
+  position: absolute;
   top: 8px;
 }
 #results .destination{
   left: 5px;
 }
 #results .estimate{
+  color: #eee;
   right: 5px;
 }
 .meter{
-  background-color: #232323;
+  background-color: #130f30;
+  display: block;
   height: 100%;
   width: 50%;
-  display: block;
 }
 a{
-  color: #ddd;
+  color: #eee;
 }
