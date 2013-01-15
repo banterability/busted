@@ -1,7 +1,8 @@
 helpers = require "./helpers"
 
 class Presenter
-  constructor: (predictions) ->
+  constructor: (response, predictions) ->
+    @response = response
     @predictions = predictions
 
   formatPrediction: (prediction) ->
@@ -13,7 +14,8 @@ class Presenter
     "Predictions:"
 
   generateBody: ->
-    (@formatPrediction(prediction) for prediction in @predictions).join "\n"
+    # Example implimentation
+    (@formatPrediction(prediction) for prediction in @predictions)
 
   respond: ->
     # Returns [success, response], where
@@ -38,12 +40,14 @@ class WebPresenter extends Presenter
     busNumber: @predictions[0].busNumber
 
   respond: ->
-    # return [false, "Error: No predictions available"] unless predictions.length > 0
-    # response = {}
-    # response.predictions = []
-    # HTMLformatHeader(predictions[0], response)
-    # (HTMLformatPrediction(p, response) for p in predictions)
-    # [true, response]
+    unless @predictions.length > 0
+        @response.status(404)
+        @response.render 'error', {msg: 'No predictions available.'}
+    else
+      context = @generateTitle()
+      context.predictions = @generateBody()
+      @response.locals = context
+      @response.render 'results', partials: {prediction: '_prediction'}
 
 class SMSPresenter extends Presenter
   formatPrediction: (prediction) ->
@@ -53,10 +57,14 @@ class SMSPresenter extends Presenter
     "Rt #{@predictions[0].route.number}:"
 
   respond: ->
-    # return [false, "Error: No predictions available"] unless predictions.length > 0
-    # response = []
-    # SMSformatHeader(predictions[0], response)
-    # (SMSformatPrediction(p, response) for p in predictions)
-    # [true, response.join("\n")]
+    unless @predictions.length > 0
+      @response.send 200, "No predictions available."
+    else
+      message = @generateBody()
+      message.unshift @generateTitle()
+      message = message.join "\n"
+      truncatedMessage = message.substring 0, 160
+      console.warn "Outgoing message > 160 chars (#{message.length})" if truncatedMessage isnt message
+      @response.send 200, truncatedMessage
 
 module.exports = {WebPresenter, SMSPresenter}

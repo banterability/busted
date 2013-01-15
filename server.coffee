@@ -12,7 +12,7 @@ _ = require 'underscore'
 profiler = require('./lib/profiler')()
 parser = require './lib/parser'
 Client = require './lib/client'
-presenter = require './lib/presenters'
+{WebPresenter, SMSPresenter} = require './lib/presenters'
 helpers = require "./lib/helpers"
 logger = require "./lib/logger"
 
@@ -47,10 +47,7 @@ if app.settings.env is "production"
 # Routes
 
 app.get "/", (req, res) ->
-  renderHTML
-    res: res
-    template: 'index'
-    status: 200
+  res.render 'index'
 
 app.get "/route/:routeId", (req, res) ->
   res.set "Content-Type", "text/html"
@@ -60,14 +57,7 @@ app.get "/route/:routeId", (req, res) ->
   client = new Client {apiKey: app.get('apiKey')}
   client.getPredictions busNumber, (results) ->
     predictions = parser.fromServer(results)
-    [success, context] = presenter.formatAsHTML(predictions)
-    if success then status = 200 else status = 404
-    context.title = "Route #{busNumber}"
-
-    options = {res, status, context}
-    options.template = 'htmlResponse'
-    options.partials = {prediction: '_prediction'}
-    renderHTML(options)
+    new WebPresenter(res, predictions).respond()
 
 app.post "/sms/", (req, res) ->
   res.set "Content-Type", "text/plain"
@@ -78,25 +68,9 @@ app.post "/sms/", (req, res) ->
     client = new Client {apiKey: app.get('apiKey')}
     client.getPredictions busNumber, (results) ->
         predictions = parser.fromServer(results)
-        [success, message] = presenter.formatAsSMS(predictions)
-        if success then status = 200 else status = 404
-        renderSMS res, status, message
+        new SMSPresenter(res, predictions).respond()
   else
-    renderSMS res, 400, "Error: Your message must include a bus number"
-
-# Helpers
-
-renderSMS = (res, status, message) ->
-  truncatedMessage = message.substring 0, 160
-  if truncatedMessage isnt message
-    console.error "Outgoing message exceeds 160 characters (#{message.length}); truncating..."
-  res.send 200, truncatedMessage # Always send 200, or Twilio won't send an SMS
-
-renderHTML = ({res, template, partials, status, context}) ->
-  res.locals = context
-  res.render template, partials: partials
-
-# Start server
+    res.send 200, "Error: Your message must include a bus number"
 
 port = process.env.PORT || 5000
 app.listen port, ->
