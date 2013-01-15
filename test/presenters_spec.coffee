@@ -1,55 +1,30 @@
-Presenters = require("../lib/presenters")
-
-PREDICTION_STUB = [
-  {
-    busNumber: '6418'
-    prediction:
-      predictedFor: new Date()
-      generatedAt:  new Date()
-      type: 'arrival'
-      delayed: false
-      distanceAway: '378'
-      minutes: 0
-    route:
-      number: '4'
-      direction: 'North Bound'
-      destination: undefined
-    stop:
-      stopId: '1565'
-      stopName: 'Michigan & 29th Street'
-  }, {
-    busNumber: '6418'
-    prediction:
-      predictedFor: new Date()
-      generatedAt:  new Date() + 1000 * 60
-      type: 'arrival'
-      delayed: false
-      distanceAway: '1032'
-      minutes: 1
-    route:
-      number: '4'
-      direction: 'North Bound'
-      destination: undefined
-    stop:
-      stopId: '1566'
-      stopName: 'Michigan & 28th Street'
-  }
-]
+Presenters = require "../lib/presenters"
+helpers = require "./helpers"
 
 describe "Presenters", ->
 
+  before ->
+    @prediction1 = new helpers.PredictionStub stopName: "Michigan & 29th Street"
+    @prediction2 = new helpers.PredictionStub {stopName: "Michigan & 28th Street", minutesFromNow: 1}
+    @allPredictions = [@prediction1, @prediction2]
+
   describe "WebPresenter", ->
     beforeEach ->
-      @presenter = new Presenters.WebPresenter(PREDICTION_STUB)
+      @presenter = new Presenters.WebPresenter(@allPredictions)
 
-    # describe "formatPredictions", ->
+    describe "formatPredictions", ->
+      it "returns an object with values for the given prediction data", ->
+        @presenter.formatPrediction(@prediction2).should.eql
+          stopName: '28th Street'
+          estimate: 1
+          percentComplete: 90
 
     describe "generateTitle", ->
       it "returns an object with route data", ->
         @presenter.generateTitle().should.eql
-          routeNumber: '4'
+          routeNumber: '1'
           routeDirection: 'North Bound'
-          busNumber: '6418'
+          busNumber: '1234'
 
     # describe "generateBody", ->
 
@@ -57,13 +32,15 @@ describe "Presenters", ->
 
   describe "SMSPresenter", ->
     beforeEach ->
-      @presenter = new Presenters.SMSPresenter(PREDICTION_STUB)
+      @presenter = new Presenters.SMSPresenter(@allPredictions)
 
-    # describe "formatPredictions", ->
+    describe "formatPredictions", ->
+      it "returns a string for the given prediction", ->
+        @presenter.formatPrediction(@prediction2).should.equal "In 1m: 28th Street"
 
     describe "generateTitle", ->
-      it "returns an object with route data", ->
-        @presenter.generateTitle().should.equal "Rt 4:"
+      it "returns a string with route data", ->
+        @presenter.generateTitle().should.equal "Rt 1:"
 
     # describe "generateBody", ->
 
