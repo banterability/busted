@@ -5,28 +5,12 @@ class Presenter
     @response = response
     @predictions = predictions
 
+  buildPredictionList: ->
+    @formatPrediction(prediction) for prediction in @predictions
+
   formatPrediction: (prediction) ->
     # Example implimentation
-    "#{prediction.stopName}: #{prediction.estimate}"
-
-  generateTitle: ->
-    # Example implimentation
-    "Predictions:"
-
-  generateBody: ->
-    # Example implimentation
-    (@formatPrediction(prediction) for prediction in @predictions)
-
-  respond: ->
-    # Returns [success, response], where
-    # - success:
-    #   true or false
-    #
-    # - response:
-    #   A string representation to return to the client
-    #
-    # Example implimentation
-    [true, @generateBody()]
+    "#{prediction.stop.stopName}: #{prediction.prediction.minutes}"
 
 class WebPresenter extends Presenter
   formatPrediction: (prediction) ->
@@ -34,37 +18,37 @@ class WebPresenter extends Presenter
     estimate: prediction.prediction.minutes
     percentComplete: helpers.calculatePercentComplete(prediction.prediction.minutes)
 
-  generateTitle: ->
+  buildGeneralContext: ->
     routeNumber: @predictions[0].route.number
     routeDirection: @predictions[0].route.direction
     busNumber: @predictions[0].busNumber
 
   respond: ->
-    unless @predictions.length > 0
-        @response.status(404)
-        @response.render 'error', {msg: 'No predictions available.'}
-    else
-      context = @generateTitle()
-      context.predictions = @generateBody()
+    if @predictions.length > 0
+      context = @buildGeneralContext()
+      context.predictions = @buildPredictionList()
       @response.locals = context
       @response.render 'results', partials: {prediction: '_prediction'}
+    else
+      @response.status(404)
+      @response.render 'error', {msg: 'No predictions available.'}
 
 class SMSPresenter extends Presenter
   formatPrediction: (prediction) ->
     "In #{prediction.prediction.minutes}m: #{helpers.trimStopName prediction.stop.stopName}"
 
-  generateTitle: ->
+  getTitle: ->
     "Rt #{@predictions[0].route.number}:"
 
   respond: ->
-    unless @predictions.length > 0
-      @response.send 200, "No predictions available."
-    else
-      message = @generateBody()
-      message.unshift @generateTitle()
+    if @predictions.length > 0
+      message = @buildPredictionList()
+      message.unshift @getTitle()
       message = message.join "\n"
       truncatedMessage = message.substring 0, 160
       console.warn "Outgoing message > 160 chars (#{message.length})" if truncatedMessage isnt message
       @response.send 200, truncatedMessage
+    else
+      @response.send 200, "No predictions available."
 
 module.exports = {WebPresenter, SMSPresenter}
