@@ -12,7 +12,7 @@ _ = require 'underscore'
 profiler = require('./lib/profiler')()
 parser = require './lib/parser'
 Client = require './lib/client'
-presenter = require './lib/presenter'
+presenter = require './lib/presenters'
 helpers = require "./lib/helpers"
 logger = require "./lib/logger"
 
