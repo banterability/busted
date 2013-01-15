@@ -10,7 +10,7 @@ describe "Presenters", ->
 
   describe "WebPresenter", ->
     beforeEach ->
-      @presenter = new Presenters.WebPresenter(@allPredictions)
+      @presenter = new Presenters.WebPresenter({}, @allPredictions)
 
     describe "formatPredictions", ->
       it "returns an object with values for the given prediction data", ->
@@ -32,7 +32,7 @@ describe "Presenters", ->
 
   describe "SMSPresenter", ->
     beforeEach ->
-      @presenter = new Presenters.SMSPresenter(@allPredictions)
+      @presenter = new Presenters.SMSPresenter({}, @allPredictions)
 
     describe "formatPredictions", ->
       it "returns a string for the given prediction", ->
