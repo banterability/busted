@@ -19,9 +19,9 @@ describe "Presenters", ->
           estimate: 1
           percentComplete: 90
 
-    describe "generateTitle", ->
+    describe "buildTitle", ->
       it "returns an object with route data", ->
-        @presenter.generateTitle().should.eql
+        @presenter.buildTitle().should.eql
           routeNumber: '1'
           routeDirection: 'North Bound'
           busNumber: '1234'
@@ -38,9 +38,9 @@ describe "Presenters", ->
       it "returns a string for the given prediction", ->
         @presenter.formatPrediction(@prediction2).should.equal "In 1m: 28th Street"
 
-    describe "generateTitle", ->
+    describe "buildTitle", ->
       it "returns a string with route data", ->
-        @presenter.generateTitle().should.equal "Rt 1:"
+        @presenter.buildTitle().should.equal "Rt 1:"
 
     # describe "generateBody", ->
 

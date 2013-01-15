@@ -18,7 +18,7 @@ class WebPresenter extends Presenter
     estimate: prediction.prediction.minutes
     percentComplete: helpers.calculatePercentComplete(prediction.prediction.minutes)
 
-  buildGeneralContext: ->
+  buildTitle: ->
     routeNumber: @predictions[0].route.number
     routeDirection: @predictions[0].route.direction
     busNumber: @predictions[0].busNumber
@@ -37,7 +37,7 @@ class SMSPresenter extends Presenter
   formatPrediction: (prediction) ->
     "In #{prediction.prediction.minutes}m: #{helpers.trimStopName prediction.stop.stopName}"
 
-  getTitle: ->
+  buildTitle: ->
     "Rt #{@predictions[0].route.number}:"
 
   respond: ->
