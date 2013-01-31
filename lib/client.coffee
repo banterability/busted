@@ -1,4 +1,4 @@
-fetch = require 'fetch'
+request = require 'request'
 
 class Client
   BASE_URL = "http://www.ctabustracker.com/bustime/api/v1/getpredictions"
@@ -20,7 +20,7 @@ class Client
   getPredictions: (busNumber, callback) ->
     url = @buildUrl busNumber
     console.log "API Fetch: ", url
-    fetch.fetchUrl url, (err, meta, body) ->
+    request {url}, (err, response, body) ->
       callback body.toString()
 
 module.exports = Client
