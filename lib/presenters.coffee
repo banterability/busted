@@ -18,7 +18,7 @@ class WebPresenter extends Presenter
     estimate: prediction.prediction.minutes
     percentComplete: helpers.calculatePercentComplete(prediction.prediction.minutes)
 
-  buildTitle: ->
+  buildGeneralContext: ->
     routeNumber: @predictions[0].route.number
     routeDirection: @predictions[0].route.direction
     busNumber: @predictions[0].busNumber
