@@ -12,8 +12,9 @@ app.set 'view engine', 'mustache'
 app.set 'layout', 'layout'
 # app.set 'partials', head: 'head'
 app.engine 'mustache', require 'hogan-express'
-app.use express.bodyParser()
 app.use "/assets", express.static "#{__dirname}/public"
+app.use express.logger()
+app.use express.bodyParser()
 
 throw "CTA API Key not configured! ($CTA_API_KEY)" unless process.env.CTA_API_KEY
 app.set 'apiKey', process.env.CTA_API_KEY
@@ -37,7 +38,6 @@ app.get "/", (req, res) ->
     status: 200
 
 app.get "/route/:routeId", (req, res) ->
-  console.log "Incoming Web: ", req.params
   res.set "Content-Type", "text/html"
 
   busNumber = req.params["routeId"]
@@ -55,7 +55,6 @@ app.get "/route/:routeId", (req, res) ->
     renderHTML(options)
 
 app.post "/sms/", (req, res) ->
-  console.log "Incoming SMS: ", req.body
   res.set "Content-Type", "text/plain"
 
   busNumber = helpers.extractBusNumber(req.body.Body || "")
@@ -73,14 +72,12 @@ app.post "/sms/", (req, res) ->
 # Helpers
 
 renderSMS = (res, status, message) ->
-  console.log "[Resposne (SMS)]: ", {status, message}
   truncatedMessage = message.substring 0, 160
   if truncatedMessage isnt message
     console.error "Outgoing message exceeds 160 characters (#{message.length}); truncating..."
   res.send 200, truncatedMessage # Always send 200, or Twilio won't send an SMS
 
 renderHTML = ({res, template, partials, status, context}) ->
-  console.log "[Resposne (Web)]: ", {template, status, context, partials}
   res.locals = context
   res.render template, partials: partials
 
