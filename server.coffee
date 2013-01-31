@@ -1,3 +1,11 @@
+if process.env.NODE_ENV is "production"
+  throw "Nodefly API Key not configured! ($NODEFLY_API_KEY)" unless process.env.NODEFLY_API_KEY
+  require('nodefly').profile(
+    process.env.NODEFLY_API_KEY,
+    'Busted',
+    {}
+  )
+
 express = require 'express'
 
 parser = require './lib/parser'
@@ -21,13 +29,6 @@ app.set 'apiKey', process.env.CTA_API_KEY
 
 if app.settings.env is "production"
   app.enable 'view cache'
-
-  throw "Nodefly API Key not configured! ($NODEFLY_API_KEY)" unless process.env.NODEFLY_API_KEY
-  require('nodefly').profile(
-    process.env.NODEFLY_API_KEY,
-    'Busted',
-    {}
-  )
 
 # Routes
 
