@@ -9,7 +9,8 @@
     "hogan-express": "~0.3.3",
     "nodefly": "stable",
     "request": "~2.12.0",
-    "underscore": "~1.4.4"
+    "underscore": "~1.4.4",
+    "newrelic": "~0.9.18-137"
   },
   "devDependencies": {
     "mocha": "~1.8.1",

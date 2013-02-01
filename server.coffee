@@ -1,4 +1,8 @@
 if process.env.NODE_ENV is "production"
+  throw "New Relic API Key not configured! ($NEW_RELIC_API_KEY)" unless process.env.NEW_RELIC_API_KEY
+  require 'newrelic'
+
+if process.env.NODE_ENV is "production"
   throw "Nodefly API Key not configured! ($NODEFLY_API_KEY)" unless process.env.NODEFLY_API_KEY
   require('nodefly').profile(
     process.env.NODEFLY_API_KEY,
