@@ -19,9 +19,9 @@ describe "Presenters", ->
           estimate: 1
           percentComplete: 90
 
-    describe "buildTitle", ->
+    describe "buildGeneralContext", ->
       it "returns an object with route data", ->
-        @presenter.buildTitle().should.eql
+        @presenter.buildGeneralContext().should.eql
           routeNumber: '1'
           routeDirection: 'North Bound'
           busNumber: '1234'
