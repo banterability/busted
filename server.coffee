@@ -7,11 +7,14 @@ if process.env.NODE_ENV is "production"
   )
 
 express = require 'express'
+_ = require 'underscore'
 
+profiler = require('./lib/profiler')()
 parser = require './lib/parser'
 Client = require './lib/client'
 presenter = require './lib/presenter'
 helpers = require "./lib/helpers"
+logger = require "./lib/logger"
 
 # Configuration
 
@@ -20,8 +23,19 @@ app.set 'view engine', 'mustache'
 app.set 'layout', 'layout'
 # app.set 'partials', head: 'head'
 app.engine 'mustache', require 'hogan-express'
+
+profiler.on 'profile', (profileObject, req, res) ->
+  _.extend profileObject,
+    remoteAddress: req.connection.remoteAddress
+    method: req.method
+    url: req.url
+    status: res.statusCode
+    logType: 'web'
+
+  logger.info 'web', profileObject
+
+app.use profiler.middleware
 app.use "/assets", express.static "#{__dirname}/public"
-app.use express.logger()
 app.use express.bodyParser()
 
 throw "CTA API Key not configured! ($CTA_API_KEY)" unless process.env.CTA_API_KEY
@@ -86,4 +100,4 @@ renderHTML = ({res, template, partials, status, context}) ->
 
 port = process.env.PORT || 5000
 app.listen port, ->
-  console.log "Server up on port #{port}"
+  logger.info "Server up on port #{port}"
