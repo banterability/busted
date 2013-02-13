@@ -8,7 +8,7 @@ Expects the following environment variables:
 
 - `CTA_API_KEY`: To retrieve prediction data. Key available from [CTA Bus Tracker](http://www.transitchicago.com/developers/bustracker.aspx)
 - `NODEFLY_API_KEY`: Monitoring & performance analysis. Key available from [Nodefly](http://apm.nodefly.com/)
-- `NEW_RELIC_API_KEY`: Monitoring & performance analysis. Key available from [Nodefly](http://newrelic.com/)
+- `NEW_RELIC_API_KEY`: Monitoring & performance analysis. Key available from [New Relic](http://newrelic.com/)
 
 ## Usage
 
