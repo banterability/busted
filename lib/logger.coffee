@@ -2,11 +2,14 @@ class Logger
   info: (msg, meta) ->
     if meta
       if meta?.logType == "web"
-        return console.log "[Request] #{meta.remoteAddress} – #{meta.method} #{meta.url} – #{meta.status} #{meta.responseTime}ms "
+        return @emit "[Request] #{meta.remoteAddress} – #{meta.method} #{meta.url} – #{meta.status} #{meta.responseTime}ms "
       if meta?.logType == "api"
-        return console.log "[CTA API] #{meta.method} #{meta.url} – #{meta.statusCode} #{meta.duration}ms"
-      console.log "[Info] #{msg}", meta
+        return @emit "[CTA API] #{meta.method} #{meta.url} – #{meta.statusCode} #{meta.duration}ms"
+      @emit "[Info] #{msg} – ", meta
     else
-      console.log "[Info] #{msg}"
+      @emit "[Info] #{msg}"
+
+  emit: (args...) ->
+    console.log args... unless process.env.NODE_ENV == "test"
 
 module.exports = logger = new Logger
