@@ -64,13 +64,12 @@ app.post "/sms/", (req, res) ->
 
   busNumber = helpers.extractBusNumber(req.body.Body || "")
 
-  if busNumber
-    client = new Client {apiKey: app.get('apiKey')}
-    client.getPredictions busNumber, (results) ->
-        predictions = parser.fromServer(results)
-        new SMSPresenter(res, predictions).respond()
-  else
-    res.send 200, "Error: Your message must include a bus number"
+  return res.send 200, "Error: Your message must include a bus number" unless busNumber
+
+  client = new Client {apiKey: app.get('apiKey')}
+  client.getPredictions busNumber, (results) ->
+      predictions = parser.fromServer(results)
+      new SMSPresenter(res, predictions).respond()
 
 port = process.env.PORT || 5000
 app.listen port, ->
