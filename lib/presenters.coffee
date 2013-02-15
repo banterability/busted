@@ -9,8 +9,7 @@ class Presenter
     @formatPrediction(prediction) for prediction in @predictions
 
   formatPrediction: (prediction) ->
-    # Example implimentation
-    "#{prediction.stop.stopName}: #{prediction.prediction.minutes}"
+    throw "Method not implemented: #formatPrediction"
 
 class WebPresenter extends Presenter
   formatPrediction: (prediction) ->
