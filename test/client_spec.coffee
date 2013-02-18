@@ -1,5 +1,5 @@
 Client = require "../lib/client"
-stubCtaApi = require "./stubs/ctaApi"
+stubCTA = require "./stubs/ctaApi"
 bond = require 'bondjs'
 
 describe "Client", ->
@@ -10,57 +10,71 @@ describe "Client", ->
       client = new Client({apiKey: demoApiKey})
       client.apiKey.should.equal demoApiKey
 
-  describe "getRoutes", ->
-    it "fetches the correct URL", (done) ->
+  describe "endpoints", ->
+    client = null
+
+    beforeEach ->
       client = new Client({apiKey: 'FAKE_API_KEY'})
-      stubFetchAndReturnOptions(client)
 
-      client.getRoutes (fetchOptions) ->
-        fetchOptions.url.should.equal "http://www.ctabustracker.com/bustime/api/v1/getroutes?key=FAKE_API_KEY"
-        done()
+    describe "getRoutes", ->
+      it "fetches the correct URL", (done) ->
+        stubFetchAndReturnOptions(client)
 
-    # it "fetches data from the CTA Bus Tracker API", (done) ->
+        client.getRoutes (fetchOptions) ->
+          fetchOptions.url.should.equal "http://www.ctabustracker.com/bustime/api/v1/getroutes?key=FAKE_API_KEY"
+          done()
 
-  describe "getRouteDirections", ->
-    it "fetches the correct URL", (done) ->
-      client = new Client({apiKey: 'FAKE_API_KEY'})
-      stubFetchAndReturnOptions(client)
+      it "fetches data from the CTA Bus Tracker API", (done) ->
+        api = stubCTA.getRoutes()
 
-      client.getRouteDirections 8, (fetchOptions) ->
-        fetchOptions.url.should.equal "http://www.ctabustracker.com/bustime/api/v1/getdirections?rt=8&key=FAKE_API_KEY"
-        done()
+        client.getRoutes (response) ->
+          api.done()
+          done()
 
-    # it "fetches data from the CTA Bus Tracker API", (done) ->
+    describe "getRouteDirections", ->
+      it "fetches the correct URL", (done) ->
+        stubFetchAndReturnOptions(client)
 
-  describe "getStops", ->
-    it "fetches the correct URL", (done) ->
-      client = new Client({apiKey: 'FAKE_API_KEY'})
-      stubFetchAndReturnOptions(client)
+        client.getRouteDirections 8, (fetchOptions) ->
+          fetchOptions.url.should.equal "http://www.ctabustracker.com/bustime/api/v1/getdirections?rt=8&key=FAKE_API_KEY"
+          done()
 
-      client.getStops 8, 'North Bound', (fetchOptions) ->
-        fetchOptions.url.should.equal "http://www.ctabustracker.com/bustime/api/v1/getstops?rt=8&dir=North Bound&key=FAKE_API_KEY"
-        done()
+      it "fetches data from the CTA Bus Tracker API", (done) ->
+        api = stubCTA.getRouteDirections()
 
-    # it "fetches data from the CTA Bus Tracker API", (done) ->
+        client.getRouteDirections 8, (response) ->
+          api.done()
+          done()
 
-  describe "getPredictions", ->
-    apiStub = client = null
+    describe "getStops", ->
+      it "fetches the correct URL", (done) ->
+        stubFetchAndReturnOptions(client)
 
-    before ->
-      client = new Client({apiKey: 'FAKE_API_KEY'})
-      apiStub = stubCtaApi()
+        client.getStops 8, 'North Bound', (fetchOptions) ->
+          fetchOptions.url.should.equal "http://www.ctabustracker.com/bustime/api/v1/getstops?rt=8&dir=North Bound&key=FAKE_API_KEY"
+          done()
 
-    it "fetches the correct URL", (done) ->
-      stubFetchAndReturnOptions(client)
+      it "fetches data from the CTA Bus Tracker API", (done) ->
+        api = stubCTA.getStops()
 
-      client.getPredictions 3556, (fetchOptions) ->
-        fetchOptions.url.should.equal "http://www.ctabustracker.com/bustime/api/v1/getpredictions?vid=3556&top=5&key=FAKE_API_KEY"
-        done()
+        client.getStops 8, 'North Bound', (response) ->
+          api.done()
+          done()
 
-    it "fetches data from the CTA Bus Tracker API", (done) ->
-      client.getPredictions 6839, (response) ->
-        apiStub.done()
-        done()
+    describe "getPredictions", ->
+      it "fetches the correct URL", (done) ->
+        stubFetchAndReturnOptions(client)
+
+        client.getPredictions 6839, (fetchOptions) ->
+          fetchOptions.url.should.equal "http://www.ctabustracker.com/bustime/api/v1/getpredictions?vid=6839&top=5&key=FAKE_API_KEY"
+          done()
+
+      it "fetches data from the CTA Bus Tracker API", (done) ->
+        api = stubCTA.getPredictions()
+
+        client.getPredictions 6839, (response) ->
+          api.done()
+          done()
 
 stubFetchAndReturnOptions = (client) ->
   bond(client, 'fetch').to (options, callback) ->
