@@ -2,21 +2,18 @@ request = require 'request'
 logger = require './logger'
 
 class Client
-  BASE_URL = "http://www.ctabustracker.com/bustime/api/v1/getpredictions"
+  BASE_URL = "http://www.ctabustracker.com/bustime/api/v1"
 
   constructor: (options={}) ->
     @apiKey = options.apiKey
 
-  buildQueryString: (busNumber) ->
-    params =
-      key: @apiKey
-      top: 5
-      vid: busNumber
-
+  buildQueryString: (params) ->
+    params.key = @apiKey
     ("#{key}=#{value}" for key, value of params).join("&")
 
-  buildUrl: (busNumber) ->
-    "#{BASE_URL}?#{@buildQueryString busNumber}"
+  buildUrl: (endpoint, params={}) ->
+    queryString = @buildQueryString params
+    "#{BASE_URL}/#{endpoint}?#{queryString}"
 
   fetch: (options, callback) ->
     options.headers ?= {}
@@ -28,11 +25,24 @@ class Client
 
     request options, (error, response, body) ->
       logApiRequest requestData, response
-
       callback body.toString()
 
+  ## routes ##
+
+  getRoutes: (callback) ->
+    url = @buildUrl 'getroutes'
+    @fetch {url}, callback
+
+  getRouteDirections: (route, callback) ->
+    url = @buildUrl 'getdirections', {rt: route}
+    @fetch {url}, callback
+
+  getStops: (route, direction, callback) ->
+    url = @buildUrl 'getstops', {rt: route, dir: direction}
+    @fetch {url}, callback
+
   getPredictions: (busNumber, callback) ->
-    url = @buildUrl busNumber
+    url = @buildUrl 'getpredictions', {vid: busNumber, top: 5}
     @fetch {url}, callback
 
 module.exports = Client
