@@ -24,7 +24,7 @@ describe "Client", ->
           done()
 
     describe "getRouteDirections", ->
-      it "fetches data from the CTA Bus Tracker API", (done) ->
+      it "fetches data from the correct API endpoint", (done) ->
         api = stubCTA.getRouteDirections()
 
         client.getRouteDirections 8, (response) ->
@@ -32,7 +32,7 @@ describe "Client", ->
           done()
 
     describe "getStops", ->
-      it "fetches data from the CTA Bus Tracker API", (done) ->
+      it "fetches data from the correct API endpoint", (done) ->
         api = stubCTA.getStops()
 
         client.getStops 8, 'North Bound', (response) ->
@@ -40,7 +40,7 @@ describe "Client", ->
           done()
 
     describe "getPredictions", ->
-      it "fetches data from the CTA Bus Tracker API", (done) ->
+      it "fetches data from the correct API endpoint", (done) ->
         api = stubCTA.getPredictions()
 
         client.getPredictions 6839, (response) ->
