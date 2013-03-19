@@ -42,7 +42,7 @@ class SMSPresenter extends Presenter
   respond: ->
     if @predictions.length > 0
       message = @buildPredictionList()
-      message.unshift @getTitle()
+      message.unshift @buildTitle()
       message = message.join "\n"
       truncatedMessage = message.substring 0, 160
       console.warn "Outgoing message > 160 chars (#{message.length})" if truncatedMessage isnt message
